@@ -3,14 +3,17 @@ import React from "react";
 import { AiOutlineArrowUp, AiOutlinePlus } from "react-icons/ai";
 import styled from "styled-components";
 import data from "./food";
-const FoodBanner = () => {
-	const { foods } = data;
+
+const FoodBanner = ({ foods, handleCatagory }) => {
 	return (
 		<div>
 			<Wrapper>
 				<div className="container py-8 mx-auto">
 					<div className="flex items-center justify-between text-black  pb-4">
-						<select className="select w-full max-w-xs bg-white">
+						<select
+							className="select w-full max-w-xs bg-white"
+							onClick={handleCatagory}
+						>
 							<option disabled selected>
 								choose catagory
 							</option>
@@ -43,7 +46,7 @@ const Food = ({ curElem }) => {
 	return (
 		<div className="card h-full bg-white w-full shadow-sm rounded-md bg-clip-padding backdrop-filter backdrop-blur-lg  border p-3">
 			<div className="relative">
-				<figure>
+				<figure className="h-40">
 					<img src={image} />
 				</figure>
 

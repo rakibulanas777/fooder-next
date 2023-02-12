@@ -4,10 +4,25 @@ import Nav from "@/component/Nav";
 import Header from "@/component/Home";
 import Main from "@/component/Main";
 import Footer from "@/component/Footer";
+import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
+export async function getStaticProps() {
+	const res = await fetch("http://localhost:8000/foods");
+	const foods = await res.json();
 
-export default function Home() {
+	return {
+		props: {
+			foods,
+		},
+	};
+}
+
+export default function Home({ foods }) {
+	const [value, getValue] = useState([]);
+	const handleCatagory = (e) => {
+		getValue(e.target.value);
+	};
 	return (
 		<>
 			<div className="bg-gradient-to-r from-white via-emerald-50 to-blue-100">
@@ -19,7 +34,7 @@ export default function Home() {
 				</Head>
 
 				<Header />
-				<Main />
+				<Main foods={foods} handleCatagory={handleCatagory} />
 			</div>
 		</>
 	);
