@@ -3,7 +3,6 @@ import Link from "next/link";
 import React from "react";
 import { AiOutlineArrowUp, AiOutlinePlus } from "react-icons/ai";
 import styled from "styled-components";
-import data from "./food";
 
 const FoodBanner = ({ foods, handleCatagory }) => {
 	return (
