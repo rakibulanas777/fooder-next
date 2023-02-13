@@ -1,3 +1,4 @@
+import { useCartContext } from "@/context/cart_context";
 import Link from "next/link";
 import React from "react";
 import { AiOutlineArrowUp, AiOutlinePlus } from "react-icons/ai";
@@ -28,7 +29,10 @@ const FoodBanner = ({ foods, handleCatagory }) => {
 							<AiOutlineArrowUp />
 						</button>
 					</div>
-					<div className="grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 ">
+					<div
+						className="grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 "
+						id="foods"
+					>
 						{foods.map((curElem) => {
 							return <Food key={curElem.id} curElem={curElem} />;
 						})}
@@ -42,15 +46,20 @@ const FoodBanner = ({ foods, handleCatagory }) => {
 export default FoodBanner;
 
 const Food = ({ curElem }) => {
+	const { addToCart } = useCartContext();
 	const { _id, user, id, title, image, category, price } = curElem;
 	return (
 		<div className="card h-full bg-white w-full shadow-sm rounded-md bg-clip-padding backdrop-filter backdrop-blur-lg  border p-3">
 			<div className="relative">
-				<figure className="h-40">
-					<img src={image} />
-				</figure>
-
-				<div className="absolute top-2 right-2">
+				<Link href={`/details/${_id}`}>
+					<figure className="h-40">
+						<img src={image} />
+					</figure>
+				</Link>
+				<div
+					className="absolute top-2 right-2"
+					onClick={() => addToCart(curElem)}
+				>
 					<div className="shadow-sm text-white bg-red-500 hover:bg-red-700  cursor-pointer p-5  rounded-full  relative">
 						<AiOutlinePlus className="absolute text-xl font-medium top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 " />
 					</div>

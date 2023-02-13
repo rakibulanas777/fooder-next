@@ -1,3 +1,4 @@
+import { useCartContext } from "@/context/cart_context";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
@@ -11,6 +12,7 @@ function Nav() {
 	const handleNav = () => {
 		setNav(!nav);
 	};
+	const { cartItems } = useCartContext();
 
 	useEffect(() => {
 		const changeColor = () => {
@@ -45,10 +47,10 @@ function Nav() {
 						<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
 					</svg>
 				</Link>
-				<ul className="hidden md:flex md:text-xl font-semibold gap-3 md:space-x-4 !text-gray-900">
+				<ul className="hidden md:flex md:text-xl md:items-center font-semibold gap-3 md:space-x-4 !text-gray-900">
 					{/* work */}
 					<Link
-						href="/"
+						href="/#foods"
 						onClick={() => setActive(0)}
 						className={
 							active === 0
@@ -56,7 +58,7 @@ function Nav() {
 								: "cursor-pointer text-sm lg:text-base xl:text-base font-medium text-gray-900"
 						}
 					>
-						Work
+						foods
 					</Link>
 					{/* strategy */}
 					<Link
@@ -82,30 +84,48 @@ function Nav() {
 					>
 						About
 					</Link>
-					{/* jobs */}
-					<Link
-						href="/"
-						onClick={() => setActive(3)}
-						className={
-							active === 3
-								? "cursor-pointer text-sm lg:text-base xl:text-base font-medium text-purple-500"
-								: "cursor-pointer text-sm lg:text-base xl:text-base font-medium text-gray-900"
-						}
-					>
-						Jobs
-					</Link>
-					{/* contact */}
-					<Link
-						href="/"
-						onClick={() => setActive(4)}
-						className={
-							active === 4
-								? "cursor-pointer text-sm lg:text-base xl:text-base font-medium text-purple-500"
-								: "cursor-pointer text-sm lg:text-base xl:text-base font-medium text-gray-900"
-						}
-					>
-						Contact
-					</Link>
+
+					<div className="dropdown dropdown-end text-black">
+						<label tabIndex={0} className="btn btn-ghost btn-circle">
+							<div className="indicator">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="h-5 w-5"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth="2"
+										d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+									/>
+								</svg>
+								<span className="badge badge-sm indicator-item">
+									{cartItems.length}
+								</span>
+							</div>
+						</label>
+						<div
+							tabIndex={0}
+							className="mt-3 card card-compact dropdown-content w-52 bg-white shadow"
+						>
+							<div className="card-body">
+								<span className="font-bold text-lg">
+									{cartItems.length} Items
+								</span>
+
+								<div className="card-actions">
+									<Link href="/cart">
+										<button className="btn text-white hover:bg-red-600 hover:border-red-600 border-red-500 btn-sm bg-red-500 btn-block">
+											see foods cart
+										</button>
+									</Link>
+								</div>
+							</div>
+						</div>
+					</div>
 				</ul>
 				{/* Mobile Button */}
 				<div onClick={handleNav} className="block sm:hidden z-10">
