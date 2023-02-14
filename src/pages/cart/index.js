@@ -1,12 +1,15 @@
 import { useCartContext } from "@/context/cart_context";
 import React from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import Modal from "./Modal";
 const FoodCart = () => {
 	const { cartItems, removeItem, addToCart } = useCartContext();
 	const itemsPrice = cartItems.reduce((a, c) => a + c.qty * c.price, 0);
 	const taxPrice = itemsPrice * 0.14;
 	const shippingPrice = itemsPrice > 2000 ? 0 : 20;
 	const totalPrice = itemsPrice + shippingPrice;
+	const { data: session } = useSession();
 	return (
 		<>
 			<div className="pt-14">
@@ -62,9 +65,22 @@ const FoodCart = () => {
 								<div className="text-right  mb-2 font-semibold text-blue-900">
 									Total Price : {totalPrice}
 								</div>
-								<button className="btn flex-end text-white hover:bg-red-600 hover:border-red-600 border-red-500 btn-sm bg-red-500">
-									Check out
-								</button>
+								{session?.user ? (
+									<label
+										htmlFor="confrim-modal"
+										className="btn flex-end text-white hover:bg-red-600 hover:border-red-600 border-red-500 btn-sm bg-red-500"
+									>
+										Check out
+									</label>
+								) : (
+									<button
+										className="btn flex-end text-white hover:bg-red-600 hover:border-red-600 border-red-500 btn-sm bg-red-500"
+										disabled
+									>
+										Check out
+									</button>
+								)}
+								<Modal />
 							</div>
 						</div>
 					</div>

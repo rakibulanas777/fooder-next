@@ -2,6 +2,7 @@ import { useCartContext } from "@/context/cart_context";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { HiMenu } from "react-icons/hi";
 
 function Nav() {
@@ -13,6 +14,7 @@ function Nav() {
 		setNav(!nav);
 	};
 	const { cartItems } = useCartContext();
+	const { data: session } = useSession();
 
 	useEffect(() => {
 		const changeColor = () => {
@@ -60,30 +62,45 @@ function Nav() {
 					>
 						foods
 					</Link>
-					{/* strategy */}
-					<Link
-						href="/"
-						onClick={() => setActive(1)}
-						className={
-							active === 1
-								? "cursor-pointer text-sm lg:text-base xl:text-base font-medium text-purple-500"
-								: "cursor-pointer text-sm lg:text-base xl:text-base font-medium text-gray-900"
-						}
-					>
-						Strategy
-					</Link>
-					{/* about */}
-					<Link
-						href="/"
-						onClick={() => setActive(2)}
-						className={
-							active === 2
-								? "cursor-pointer text-sm lg:text-base xl:text-base font-medium text-purple-500"
-								: "cursor-pointer text-sm lg:text-base xl:text-base font-medium text-gray-900"
-						}
-					>
-						About
-					</Link>
+					{/* login */}
+					{session ? (
+						<div className="dropdown dropdown-end">
+							<label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+								<div className="w-10 rounded-full">
+									<img src={session.user.image} />
+								</div>
+							</label>
+							<ul
+								tabIndex={0}
+								className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-white rounded-box w-52"
+							>
+								<li>
+									<a className="justify-between">
+										Profile
+										<span className="badge">New</span>
+									</a>
+								</li>
+								<li>
+									<a>Settings</a>
+								</li>
+								<li onClick={() => signOut()}>
+									<button>Logout</button>
+								</li>
+							</ul>
+						</div>
+					) : (
+						<Link
+							href="/login"
+							onClick={() => setActive(1)}
+							className={
+								active === 1
+									? "cursor-pointer text-sm lg:text-base xl:text-base font-medium text-purple-500"
+									: "cursor-pointer text-sm lg:text-base xl:text-base font-medium text-gray-900"
+							}
+						>
+							Login
+						</Link>
+					)}
 
 					<div className="dropdown dropdown-end text-black">
 						<label tabIndex={0} className="btn btn-ghost btn-circle">

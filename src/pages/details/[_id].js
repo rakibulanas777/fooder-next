@@ -5,6 +5,7 @@ import { MdSecurity } from "react-icons/md";
 import { TbTruckDelivery, TbReplace } from "react-icons/tb";
 import { AiFillClockCircle } from "react-icons/ai";
 import PageNavigation from "@/component/PageNavigation";
+import { useCartContext } from "@/context/cart_context";
 
 const API = "http://localhost:8000/foods";
 
@@ -36,6 +37,7 @@ export async function getStaticProps(context) {
 }
 
 const foodDetails = ({ food }) => {
+	const { cartItems, removeItem, addToCart } = useCartContext();
 	const { title, desc, price, catagory, image } = food;
 	return (
 		<>
@@ -60,7 +62,10 @@ const foodDetails = ({ food }) => {
 							<p className="font-semibold  mb-2">{desc}</p>
 
 							<div className="border-b-2 border-gray-100 pb-4">
-								<button className="py-2 px-4 mt-4 rounded bg-blue-900 text-white font-medium w-full">
+								<button
+									className="py-2 px-4 mt-4 rounded bg-blue-900 text-white font-medium w-full"
+									onClick={() => addToCart(food)}
+								>
 									add to cart
 								</button>
 							</div>
