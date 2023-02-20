@@ -1,10 +1,15 @@
 import { useCartContext } from "@/context/cart_context";
 import Link from "next/link";
 import React from "react";
-import { AiOutlineArrowUp, AiOutlinePlus } from "react-icons/ai";
+import {
+	AiOutlineArrowDown,
+	AiOutlineArrowUp,
+	AiOutlinePlus,
+} from "react-icons/ai";
 import styled from "styled-components";
 
-const FoodBanner = ({ foods, handleCatagory }) => {
+const FoodBanner = ({ foods }) => {
+	const { handleCatagory, handleSort, sort } = useCartContext();
 	return (
 		<div>
 			<Wrapper>
@@ -14,18 +19,19 @@ const FoodBanner = ({ foods, handleCatagory }) => {
 							className="select w-full max-w-xs bg-white"
 							onClick={handleCatagory}
 						>
-							<option disabled selected>
-								choose catagory
-							</option>
-							<option>Homer</option>
+							<option selected>All</option>
+							<option>chicken</option>
 							<option>Marge</option>
 							<option>Bart</option>
 							<option>Lisa</option>
 							<option>Maggie</option>
 						</select>
-						<button className="flex bg-white py-2 px-3 gap-2 items-center rounded-sm font-medium border-white">
+						<button
+							className="flex bg-white py-2 px-3 gap-2 items-center rounded-sm font-medium border-white"
+							onClick={handleSort}
+						>
 							<span className=" font-medium">sort</span>
-							<AiOutlineArrowUp />
+							{sort ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
 						</button>
 					</div>
 					<div

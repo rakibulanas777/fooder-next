@@ -12,7 +12,15 @@ const initialState = {
 
 const CartProvider = ({ children }) => {
 	const [cartItems, setCartItems] = useState([]);
-
+	const [selectValue, getValue] = useState([]);
+	const [sort, setSort] = useState(false);
+	const handleCatagory = (e) => {
+		getValue(e.target.value.toLowerCase());
+	};
+	const handleSort = (e) => {
+		setSort(!sort);
+	};
+	console.log(selectValue);
 	const addToCart = (food) => {
 		const exist = cartItems.find((x) => x._id === food._id);
 		if (exist) {
@@ -41,7 +49,16 @@ const CartProvider = ({ children }) => {
 
 	return (
 		<CartContext.Provider
-			value={{ cartItems, addToCart, setCartItems, removeItem }}
+			value={{
+				cartItems,
+				sort,
+				handleSort,
+				handleCatagory,
+				selectValue,
+				addToCart,
+				setCartItems,
+				removeItem,
+			}}
 		>
 			{children}
 		</CartContext.Provider>

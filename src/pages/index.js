@@ -4,25 +4,39 @@ import Nav from "@/component/Nav";
 import Header from "@/component/Home";
 import Main from "@/component/Main";
 import Footer from "@/component/Footer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCartContext } from "@/context/cart_context";
 
 const inter = Inter({ subsets: ["latin"] });
-export async function getStaticProps() {
-	const res = await fetch("http://localhost:8000/foods");
-	const foods = await res.json();
+// export async function getStaticProps() {
+// 	const res = await fetch(`http://localhost:8000/foods?catagory=${value}`);
+// 	const foods = await res.json();
 
-	return {
-		props: {
-			foods,
-		},
-	};
-}
+// 	return {
+// 		props: {
+// 			foods,
+// 		},
+// 	};
+// }
 
-export default function Home({ foods }) {
-	const [value, getValue] = useState([]);
-	const handleCatagory = (e) => {
-		getValue(e.target.value);
-	};
+export default function Home() {
+	const [foods, setFoods] = useState([]);
+	const { selectValue, sort } = useCartContext();
+	console.log(selectValue);
+	useEffect(() => {
+		async function fetchData() {
+			const res = await fetch(
+				`http://localhost:8000/foods?catagory=${selectValue}`
+			);
+			const foods = await res.json();
+			{
+				sort
+					? setFoods(foods.sort((a, b) => a.price - b.price))
+					: setFoods(foods.sort((a, b) => b.price - a.price));
+			}
+		}
+		fetchData();
+	}, [selectValue, sort]);
 	return (
 		<>
 			<div className="bg-gradient-to-r from-white via-emerald-50 to-blue-100">
@@ -34,7 +48,7 @@ export default function Home({ foods }) {
 				</Head>
 
 				<Header />
-				<Main foods={foods} handleCatagory={handleCatagory} />
+				<Main foods={foods} />
 			</div>
 		</>
 	);

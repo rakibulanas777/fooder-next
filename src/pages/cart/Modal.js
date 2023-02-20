@@ -7,14 +7,34 @@ const Modal = () => {
 	const { cartItems, removeItem, addToCart, setCartItems } = useCartContext();
 	const { data: session } = useSession();
 	const handleSubmit = (e) => {
+		e.preventDefault();
 		const order = [
+			...cartItems,
 			{
-				...cartItems,
-				user: session.user,
+				name: session.user.name,
+				email: session.user.email,
+				imageurl: session.user.image,
 			},
 		];
+
 		console.log(order);
-		e.preventDefault();
+		fetch("http://localhost:8000/order", {
+			method: "POST",
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify(order),
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				console.log(data);
+
+				if (data) {
+					toast.success("product added");
+				} else {
+					toast.error(data.message);
+				}
+			});
 	};
 	return (
 		<>
@@ -37,6 +57,7 @@ const Modal = () => {
 					</form>
 				</div>
 			</div>
+			<ToastContainer />
 		</>
 	);
 };
