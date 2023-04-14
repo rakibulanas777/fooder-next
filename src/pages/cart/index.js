@@ -3,6 +3,8 @@ import React from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import Modal from "./Modal";
+import { useUserContext } from "@/context/userContext";
+import Link from "next/link";
 const FoodCart = () => {
 	const { cartItems, removeItem, addToCart } = useCartContext();
 	const itemsPrice = cartItems.reduce((a, c) => a + c.qty * c.price, 0);
@@ -10,6 +12,7 @@ const FoodCart = () => {
 	const shippingPrice = itemsPrice > 2000 ? 0 : 20;
 	const totalPrice = itemsPrice + shippingPrice;
 	const { data: session } = useSession();
+	const { user } = useUserContext();
 	return (
 		<>
 			<div className="pt-14">
@@ -65,22 +68,11 @@ const FoodCart = () => {
 								<div className="text-right  mb-2 font-semibold text-blue-900">
 									Total Price : {totalPrice}
 								</div>
-								{session?.user ? (
-									<label
-										htmlFor="confrim-modal"
-										className="btn flex-end text-white hover:bg-red-600 hover:border-red-600 border-red-500 btn-sm bg-red-500"
-									>
-										Check out
-									</label>
-								) : (
-									<button
-										className="btn flex-end text-white hover:bg-red-600 hover:border-red-600 border-red-500 btn-sm bg-red-500"
-										disabled
-									>
+								<Link href="/order">
+									<button className="btn flex-end text-white hover:bg-red-600 hover:border-red-600 border-red-500 btn-sm bg-red-500">
 										Check out
 									</button>
-								)}
-								<Modal />
+								</Link>
 							</div>
 						</div>
 					</div>

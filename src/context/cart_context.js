@@ -1,5 +1,10 @@
-import { createContext, useContext, useReducer, useState } from "react";
-import reducer from "../reducer/cartReducer";
+import {
+	createContext,
+	useContext,
+	useEffect,
+	useReducer,
+	useState,
+} from "react";
 
 const CartContext = createContext();
 
@@ -12,6 +17,7 @@ const initialState = {
 
 const CartProvider = ({ children }) => {
 	const [cartItems, setCartItems] = useState([]);
+	const [cart, setCart] = useState([]);
 	const [selectValue, getValue] = useState([]);
 	const [sort, setSort] = useState(false);
 	const handleCatagory = (e) => {
@@ -20,7 +26,7 @@ const CartProvider = ({ children }) => {
 	const handleSort = (e) => {
 		setSort(!sort);
 	};
-	console.log(selectValue);
+	console.log(cart);
 	const addToCart = (food) => {
 		const exist = cartItems.find((x) => x._id === food._id);
 		if (exist) {
@@ -46,12 +52,19 @@ const CartProvider = ({ children }) => {
 			);
 		}
 	};
+	useEffect(() => {
+		localStorage.setItem("foodCart", JSON.stringify(cartItems));
+
+		let localCartData = localStorage.getItem("foodCart");
+		setCart(JSON.parse(localCartData));
+	}, [cartItems]);
 
 	return (
 		<CartContext.Provider
 			value={{
 				cartItems,
 				sort,
+				cart,
 				handleSort,
 				handleCatagory,
 				selectValue,

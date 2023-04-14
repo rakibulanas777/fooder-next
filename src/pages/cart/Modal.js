@@ -3,19 +3,14 @@ import { ToastContainer, toast } from "react-toastify";
 import { useCartContext } from "@/context/cart_context";
 import { useSession, signIn, signOut } from "next-auth/react";
 import "react-toastify/dist/ReactToastify.css";
+import { useUserContext } from "@/context/userContext";
 const Modal = () => {
 	const { cartItems, removeItem, addToCart, setCartItems } = useCartContext();
 	const { data: session } = useSession();
+	const { user } = useUserContext();
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		const order = [
-			...cartItems,
-			{
-				name: session.user.name,
-				email: session.user.email,
-				imageurl: session.user.image,
-			},
-		];
+		const order = { cart: cartItems, user: user.data.user._id };
 
 		console.log(order);
 		fetch("http://localhost:8000/order", {

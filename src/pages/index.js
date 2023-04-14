@@ -48,7 +48,7 @@ export default function Home() {
 				</Head>
 
 				<Header />
-				<Main foods={foods} />
+				<Main foods={foods} setFoods={setFoods} />
 			</div>
 		</>
 	);

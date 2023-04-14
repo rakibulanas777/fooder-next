@@ -1,14 +1,19 @@
 import { useCartContext } from "@/context/cart_context";
+import { useUserContext } from "@/context/userContext";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import {
+	AiFillDelete,
 	AiOutlineArrowDown,
 	AiOutlineArrowUp,
 	AiOutlinePlus,
 } from "react-icons/ai";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { ToastContainer, toast } from "react-toastify";
 import styled from "styled-components";
 
-const FoodBanner = ({ foods }) => {
+const FoodBanner = ({ foods, setFoods }) => {
 	const { handleCatagory, handleSort, sort } = useCartContext();
 	return (
 		<div>
@@ -21,9 +26,9 @@ const FoodBanner = ({ foods }) => {
 						>
 							<option selected>All</option>
 							<option>chicken</option>
-							<option>Marge</option>
-							<option>Bart</option>
-							<option>Lisa</option>
+							<option>foods</option>
+							<option>rice</option>
+							<option>ice-cream</option>
 							<option>Maggie</option>
 						</select>
 						<button
@@ -52,23 +57,51 @@ export default FoodBanner;
 
 const Food = ({ curElem }) => {
 	const { addToCart } = useCartContext();
-	const { _id, user, id, title, image, category, price } = curElem;
+
+	const handleDelete = (id) => {
+		fetch(`http://localhost:8000/foods/${id}`, {
+			method: "DELETE",
+		})
+			.then((res) => res.json()) // or res.json()
+			.then((data) => {
+				alert("are you sure procesd");
+				toast.error("deleted");
+			});
+	};
+
+	const { user } = useUserContext();
+	const router = useRouter();
+
+	const { _id, title, image, category, price } = curElem;
 	return (
 		<div className="card h-full bg-white w-full shadow-sm rounded-md bg-clip-padding backdrop-filter backdrop-blur-lg  border p-3">
 			<div className="relative">
-				<Link href={`/details/${_id}`}>
+				<Link href={`/details/${title}`}>
 					<figure className="h-40">
 						<img src={image} />
 					</figure>
 				</Link>
-				<div
-					className="absolute top-2 right-2"
-					onClick={() => addToCart(curElem)}
-				>
-					<div className="shadow-sm text-white bg-red-500 hover:bg-red-700  cursor-pointer p-5  rounded-full  relative">
-						<AiOutlinePlus className="absolute text-xl font-medium top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 " />
+				{user?.data.user.isAdmin ? (
+					<>
+						<div
+							className="absolute top-2 right-2"
+							onClick={() => handleDelete(curElem._id)}
+						>
+							<div className="shadow-sm text-white bg-red-500 hover:bg-red-700  cursor-pointer p-5  rounded-full  relative">
+								<AiFillDelete className="absolute text-xl font-medium top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 " />
+							</div>
+						</div>
+					</>
+				) : (
+					<div
+						className="absolute top-2 right-2"
+						onClick={() => addToCart(curElem)}
+					>
+						<div className="shadow-sm text-white bg-red-500 hover:bg-red-700  cursor-pointer p-5  rounded-full  relative">
+							<AiOutlinePlus className="absolute text-xl font-medium top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 " />
+						</div>
 					</div>
-				</div>
+				)}
 			</div>
 			<div className="card-data pt-3">
 				<div className="flex items-center text-black justify-between">
@@ -78,6 +111,7 @@ const Food = ({ curElem }) => {
 					</div>
 				</div>
 			</div>
+			<ToastContainer />
 		</div>
 	);
 };

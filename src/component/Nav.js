@@ -4,16 +4,19 @@ import React, { useState, useEffect } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { HiMenu } from "react-icons/hi";
+import { useUserContext } from "@/context/userContext";
 
 function Nav() {
 	const [nav, setNav] = useState(false);
 	const [color, setColor] = useState("transparent");
 	const [textColor, setTextColor] = useState("white");
 	const [active, setActive] = useState(0);
+	const { user } = useUserContext();
+	console.log(user?.data.user.isAdmin);
 	const handleNav = () => {
 		setNav(!nav);
 	};
-	const { cartItems } = useCartContext();
+	const { cartItems, cart } = useCartContext();
 	const { data: session } = useSession();
 
 	useEffect(() => {
@@ -63,11 +66,13 @@ function Nav() {
 						foods
 					</Link>
 					{/* login */}
-					{session ? (
+					{user ? (
 						<div className="dropdown dropdown-end">
 							<label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-								<div className="w-10 rounded-full">
-									<img src={session.user.image} />
+								<div className="w-10 rounded-full bg-blue-500 relative">
+									<div className="text-xl font-semibold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+										{user?.data.user.name.charAt(0)}
+									</div>
 								</div>
 							</label>
 							<ul
@@ -75,11 +80,23 @@ function Nav() {
 								className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-white rounded-box w-52"
 							>
 								<li>
-									<a className="justify-between">
-										Profile
-										<span className="badge">New</span>
-									</a>
+									<a className="justify-between">Profile</a>
 								</li>
+								{user.data.user.isAdmin && (
+									<li>
+										<Link href="/addfood">add food</Link>
+									</li>
+								)}
+								{user.data.user.isAdmin ? (
+									<li>
+										<Link href="/addfood">order list</Link>
+									</li>
+								) : (
+									<li>
+										<Link href="/myOrder">my order</Link>
+									</li>
+								)}
+
 								<li>
 									<a>Settings</a>
 								</li>
@@ -120,7 +137,7 @@ function Nav() {
 									/>
 								</svg>
 								<span className="badge badge-sm indicator-item">
-									{cartItems.length}
+									{cartItems?.length}
 								</span>
 							</div>
 						</label>
@@ -130,7 +147,7 @@ function Nav() {
 						>
 							<div className="card-body">
 								<span className="font-bold text-lg">
-									{cartItems.length} Items
+									{cartItems?.length} Items
 								</span>
 
 								<div className="card-actions">

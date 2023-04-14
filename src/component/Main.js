@@ -1,10 +1,10 @@
 import React from "react";
 import FoodBanner from "./FoodBanner";
 
-const Main = ({ foods }) => {
+const Main = ({ foods, setFoods }) => {
 	return (
 		<>
-			<FoodBanner foods={foods} />
+			<FoodBanner foods={foods} setFoods={setFoods} />
 		</>
 	);
 };
