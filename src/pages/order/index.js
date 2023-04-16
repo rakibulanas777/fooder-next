@@ -164,7 +164,7 @@ const FoodCart = () => {
 											id="email"
 											name="email"
 											type="email"
-											placeholder={user.data.user.email}
+											placeholder={user?.data.user.email}
 										/>
 									</div>
 									<div
