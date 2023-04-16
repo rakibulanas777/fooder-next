@@ -1,10 +1,16 @@
 import React from "react";
 import FoodBanner from "./FoodBanner";
 
-const Main = ({ foods, setFoods }) => {
+const Main = ({ foods, setFoods, pageCount, pages, setPages }) => {
 	return (
 		<>
-			<FoodBanner foods={foods} setFoods={setFoods} />
+			<FoodBanner
+				foods={foods}
+				pages={pages}
+				setpages={setPages}
+				setFoods={setFoods}
+				pageCount={pageCount}
+			/>
 		</>
 	);
 };

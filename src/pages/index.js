@@ -22,13 +22,18 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
 	const [foods, setFoods] = useState([]);
 	const { selectValue, sort } = useCartContext();
+	const [pageCount, setPageCount] = useState(0);
+	const [pages, setPages] = useState(0);
 	console.log(selectValue);
 	useEffect(() => {
 		async function fetchData() {
 			const res = await fetch(
-				`http://localhost:8000/foods?catagory=${selectValue}`
+				`https://fooder-server.onrender.com/foods?catagory=${selectValue}`
 			);
 			const foods = await res.json();
+			const count = foods.length;
+			const pages = Math.ceil(count / 5);
+			setPageCount(pages);
 			{
 				sort
 					? setFoods(foods.sort((a, b) => a.price - b.price))
@@ -48,7 +53,13 @@ export default function Home() {
 				</Head>
 
 				<Header />
-				<Main foods={foods} setFoods={setFoods} />
+				<Main
+					foods={foods}
+					setFoods={setFoods}
+					pages={pages}
+					setpages={setPages}
+					pageCount={pageCount}
+				/>
 			</div>
 		</>
 	);

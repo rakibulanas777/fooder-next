@@ -13,7 +13,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { ToastContainer, toast } from "react-toastify";
 import styled from "styled-components";
 
-const FoodBanner = ({ foods, setFoods }) => {
+const FoodBanner = ({ foods, setFoods, pageCount, pages, setPages }) => {
 	const { handleCatagory, handleSort, sort } = useCartContext();
 	return (
 		<div>
@@ -47,6 +47,13 @@ const FoodBanner = ({ foods, setFoods }) => {
 							return <Food key={curElem.id} curElem={curElem} />;
 						})}
 					</div>
+					<div>
+						{[...Array(pageCount).keys()].map((number) => (
+							<button className="px-3 py-2 " onClick={() => setPages(number)}>
+								{number + 1}
+							</button>
+						))}
+					</div>
 				</div>
 			</Wrapper>
 		</div>
@@ -59,7 +66,7 @@ const Food = ({ curElem }) => {
 	const { addToCart } = useCartContext();
 
 	const handleDelete = (id) => {
-		fetch(`http://localhost:8000/foods/${id}`, {
+		fetch(`https://fooder-server.onrender.com/foods/${id}`, {
 			method: "DELETE",
 		})
 			.then((res) => res.json()) // or res.json()

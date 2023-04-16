@@ -35,7 +35,7 @@ const AddFood = () => {
 		const catagory = form.catagory.value;
 		const foodData = { title, desc, price, image, catagory };
 		console.log(foodData);
-		fetch("http://localhost:8000/foods", {
+		fetch("https://fooder-server.onrender.com/foods", {
 			method: "POST",
 			headers: {
 				"content-type": "application/json",

@@ -21,7 +21,7 @@ const LogIn = () => {
 		const loginData = { email, password };
 		console.log(loginData);
 
-		fetch("http://localhost:8000/users/login", {
+		fetch("https://fooder-server.onrender.com/users/login", {
 			method: "POST",
 			headers: {
 				"content-type": "application/json",

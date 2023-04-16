@@ -1,19 +1,6 @@
-import {
-	createContext,
-	useContext,
-	useEffect,
-	useReducer,
-	useState,
-} from "react";
+import { createContext, useContext, useState } from "react";
 
 const CartContext = createContext();
-
-const initialState = {
-	cart: [],
-	total_item: "",
-	total_amount: "",
-	shipping_fee: 50000,
-};
 
 const CartProvider = ({ children }) => {
 	const [cartItems, setCartItems] = useState([]);
@@ -52,12 +39,12 @@ const CartProvider = ({ children }) => {
 			);
 		}
 	};
-	useEffect(() => {
-		localStorage.setItem("foodCart", JSON.stringify(cartItems));
+	// useEffect(() => {
+	// 	localStorage.setItem("foodCart", JSON.stringify(cartItems));
 
-		let localCartData = localStorage.getItem("foodCart");
-		setCart(JSON.parse(localCartData));
-	}, [cartItems]);
+	// 	let localCartData = localStorage.getItem("foodCart");
+	// 	setCart(JSON.parse(localCartData));
+	// }, [cartItems]);
 
 	return (
 		<CartContext.Provider

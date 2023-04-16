@@ -5,6 +5,7 @@ import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import Modal from "./Modal";
 import { useUserContext } from "@/context/userContext";
 import Link from "next/link";
+import { useRouter } from "next/router";
 const FoodCart = () => {
 	const { cartItems, removeItem, addToCart } = useCartContext();
 	const itemsPrice = cartItems.reduce((a, c) => a + c.qty * c.price, 0);
@@ -12,7 +13,11 @@ const FoodCart = () => {
 	const shippingPrice = itemsPrice > 2000 ? 0 : 20;
 	const totalPrice = itemsPrice + shippingPrice;
 	const { data: session } = useSession();
+	const router = useRouter();
 	const { user } = useUserContext();
+	const handlePush = () => {
+		router.push("/login");
+	};
 	return (
 		<>
 			<div className="pt-14">
@@ -68,11 +73,20 @@ const FoodCart = () => {
 								<div className="text-right  mb-2 font-semibold text-blue-900">
 									Total Price : {totalPrice}
 								</div>
-								<Link href="/order">
-									<button className="btn flex-end text-white hover:bg-red-600 hover:border-red-600 border-red-500 btn-sm bg-red-500">
+								{user?.data.user ? (
+									<Link href="/order">
+										<button className="btn flex-end text-white hover:bg-red-600 hover:border-red-600 border-red-500 btn-sm bg-red-500">
+											Check out
+										</button>
+									</Link>
+								) : (
+									<button
+										className="btn flex-end text-white hover:bg-red-600 hover:border-red-600 border-red-500 btn-sm bg-red-500"
+										onClick={handlePush}
+									>
 										Check out
 									</button>
-								</Link>
+								)}
 							</div>
 						</div>
 					</div>

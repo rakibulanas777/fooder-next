@@ -20,7 +20,7 @@ const Register = () => {
 		const passwordConfrim = form.confrimPassword.value;
 		const userData = { name, email, password, passwordConfrim };
 		console.log(userData);
-		fetch("http://localhost:8000/users", {
+		fetch("https://fooder-server.onrender.com/users", {
 			method: "POST",
 			headers: {
 				"content-type": "application/json",

@@ -7,7 +7,7 @@ import { AiFillClockCircle } from "react-icons/ai";
 import PageNavigation from "@/component/PageNavigation";
 import { useCartContext } from "@/context/cart_context";
 
-const API = "http://localhost:8000/foods";
+const API = "https://fooder-server.onrender.com/foods";
 
 export const getStaticPaths = async () => {
 	const res = await fetch(API);
@@ -27,7 +27,7 @@ export const getStaticPaths = async () => {
 export async function getStaticProps(context) {
 	const id = context.params.title;
 
-	const res = await fetch(`http://localhost:8000/foods/${id}`);
+	const res = await fetch(`https://fooder-server.onrender.com/foods/${id}`);
 	const food = await res.json();
 	return {
 		props: {

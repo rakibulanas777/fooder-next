@@ -2,17 +2,57 @@ import { useCartContext } from "@/context/cart_context";
 import React from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useUserContext } from "@/context/userContext";
 import Link from "next/link";
 const FoodCart = () => {
-	const { cartItems, removeItem, addToCart } = useCartContext();
+	const { cartItems, removeItem, addToCart, cart } = useCartContext();
 	const itemsPrice = cartItems.reduce((a, c) => a + c.qty * c.price, 0);
 	const taxPrice = itemsPrice * 0.14;
 	const shippingPrice = itemsPrice > 2000 ? 0 : 20;
 	const totalPrice = itemsPrice + shippingPrice;
 	const { data: session } = useSession();
 	const { user } = useUserContext();
+	const handleOnSubmit = async (e) => {
+		e.preventDefault();
+		const name = user.data.user.name;
+		const address = e.target.address.value;
+		const country = e.target.country.value;
+		const mobile = e.target.mobile.value;
+		const email = user.data.user.email;
+
+		const orderData = {
+			name,
+			address,
+			country,
+			cart: [...cart],
+			mobile,
+			email,
+			totalPrice,
+		};
+
+		fetch("https://fooder-server.onrender.com/order", {
+			method: "POST",
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify(orderData),
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				if (data === null) {
+					toast.error("please register first", {
+						position: toast.POSITION.TOP_CENTER,
+					});
+				} else {
+					toast.success("order placed !", {
+						position: toast.POSITION.TOP_CENTER,
+					});
+					e.target.reset();
+				}
+			});
+	};
 	return (
 		<>
 			<div className="pt-14">
@@ -51,103 +91,106 @@ const FoodCart = () => {
 										);
 									})}
 								</div>
-								<div className="p-3">
+								<form className="p-3" onSubmit={handleOnSubmit}>
 									<div className="mb-4">
 										<label
 											className="block text-gray-700 text-sm  mb-2"
-											for="username"
+											for="name"
 										>
 											name
 										</label>
 										<input
 											className="shadow-sm bg-white appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-											id="username"
+											id="name"
 											name="name"
 											type="text"
-											placeholder="Username"
+											placeholder={user.data.user.name}
 										/>
 									</div>
 									<div className="mb-4">
 										<label
 											className="block text-gray-700 text-sm  mb-2"
-											for="username"
+											for="address"
 										>
-											adreess
+											address
 										</label>
 										<input
 											className="shadow-sm bg-white appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-											id="username"
-											name="name"
+											id="address"
+											name="address"
 											type="text"
-											placeholder="Username"
+											placeholder="address"
 										/>
 									</div>
 									<div className="mb-4">
 										<label
 											className="block text-gray-700 text-sm  mb-2"
-											for="username"
+											for="country"
 										>
 											Country
 										</label>
 										<input
 											className="shadow-sm bg-white appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-											id="username"
-											name="name"
+											id="country"
+											name="country"
 											type="text"
-											placeholder="Username"
+											placeholder="country"
 										/>
 									</div>
 									<div className="mb-4">
 										<label
 											className="block text-gray-700 text-sm  mb-2"
-											for="username"
+											for="mobile"
 										>
 											Mobile
 										</label>
 										<input
 											className="shadow-sm bg-white appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-											id="username"
-											name="name"
+											id="mobile"
+											name="mobile"
 											type="text"
-											placeholder="Username"
+											placeholder="mobile"
 										/>
 									</div>
 									<div className="mb-4">
 										<label
 											className="block text-gray-700 text-sm  mb-2"
-											for="username"
+											for="email"
 										>
 											email
 										</label>
 										<input
 											className="shadow-sm bg-white appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-											id="username"
-											name="name"
-											type="text"
-											placeholder="Username"
+											id="email"
+											name="email"
+											type="email"
+											placeholder={user.data.user.email}
 										/>
 									</div>
-								</div>
-							</div>
-							<div
-								className={
-									cartItems.length === 0
-										? "mx-auto hidden  items-end justify-center px-6 flex-col"
-										: "mx-auto  flex items-end justify-center px-6 flex-col"
-								}
-							>
-								<div className="text-right  mb-2 font-semibold text-blue-900">
-									Shipping : {shippingPrice}
-								</div>
+									<div
+										className={
+											cartItems.length === 0
+												? "mx-auto hidden  items-end justify-center px-6 flex-col"
+												: "mx-auto  flex items-end justify-center px-6 flex-col"
+										}
+									>
+										<div className="text-right  mb-2 font-semibold text-blue-900">
+											Shipping : {shippingPrice}
+										</div>
 
-								<div className="text-right  mb-2 font-semibold text-blue-900">
-									Total Price : {totalPrice}
-								</div>
-								<Link href="/order">
-									<button className="btn flex-end text-white hover:bg-red-600 hover:border-red-600 border-red-500 btn-sm bg-red-500">
-										pay {totalPrice}
-									</button>
-								</Link>
+										<div className="text-right  mb-2 font-semibold text-blue-900">
+											Total Price : {totalPrice}
+										</div>
+
+										<button
+											className="btn flex-end text-white hover:bg-red-600 hover:border-red-600 border-red-500 btn-sm bg-red-500"
+											type="submit"
+										>
+											pay {totalPrice}
+										</button>
+									</div>
+								</form>
+								<ToastContainer />
 							</div>
 						</div>
 					</div>
