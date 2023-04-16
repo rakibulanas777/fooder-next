@@ -16,11 +16,11 @@ const FoodCart = () => {
 	const { user } = useUserContext();
 	const handleOnSubmit = async (e) => {
 		e.preventDefault();
-		const name = user.data.user.name;
+		const name = user?.data.user.name;
 		const address = e.target.address.value;
 		const country = e.target.country.value;
 		const mobile = e.target.mobile.value;
-		const email = user.data.user.email;
+		const email = user?.data.user.email;
 
 		const orderData = {
 			name,
@@ -41,16 +41,10 @@ const FoodCart = () => {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				if (data === null) {
-					toast.error("please register first", {
-						position: toast.POSITION.TOP_CENTER,
-					});
-				} else {
-					toast.success("order placed !", {
-						position: toast.POSITION.TOP_CENTER,
-					});
-					e.target.reset();
-				}
+				toast.success("order placed !", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				e.target.reset();
 			});
 	};
 	return (
@@ -104,7 +98,7 @@ const FoodCart = () => {
 											id="name"
 											name="name"
 											type="text"
-											placeholder={user.data.user.name}
+											placeholder={user?.data.user.name}
 										/>
 									</div>
 									<div className="mb-4">
